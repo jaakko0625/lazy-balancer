@@ -29,7 +29,7 @@
                         <label class="col-sm-2 control-label">最大连接数</label>
                         <div class="col-sm-9">
                             <div id="div_worker_connections">
-                                <input type="text" class="form-control" name="worker_connections" id="input_worker_connections" placeholder="系统支持的最大并发连接数（1-99999）" value="{{ main_config.worker_connections }}" onblur="check_form(this)" data-inputmask="'mask':'[9]{1,5}'" data-mask>
+                                <input type="text" class="form-control" name="worker_connections" id="input_worker_connections" placeholder="系统支持的最大并发连接数（1-99999）" value="{{ main_config.worker_connections }}" onblur="check_form(this)" data-inputmask="'mask':'[9]{1,6}'" data-mask>
                             </div>
                         </div>
                     </div>
