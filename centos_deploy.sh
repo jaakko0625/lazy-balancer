@@ -1,14 +1,14 @@
 #!/bin/bash
 
-yum update
+yum update -y
+yum -y install epel-release
 yum install -y python3 python3-devel python3-pip
-yum -y install make gcc zlib zlib-devel pcre-devel openssl openssl-devel libxslt geoip-devel gd-devel
+yum -y install tar make gcc zlib zlib-devel pcre-devel openssl openssl-devel libxslt-devel geoip-devel gd-devel
 rm -rf /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
 
 mkdir -p /app/lazy_balancer/db
 #sudo cp -r /vagrant/* /app/lazy_balancer
 chown -R 1000.1000 /app
-curl -fsSL https://github.com/openresty/luajit2/archive/v2.1-20190626.tar.gz -o /tmp/luajit.tar.gz 
 tar zxf luajit* -C /tmp && cd /tmp/luajit2-2.1-20190626
 make && make install
 export LUAJIT_INC=/usr/local/include/luajit-2.1
@@ -59,7 +59,7 @@ mkdir -p /etc/nginx/conf.d
 
 cd /app/lazy_balancer
 cp -r ~/lazy-balancer/* /app/lazy_balancer/
-cp -rf resource/nginx/nginx.conf.default /etc/nginx/nginx.conf
+cp -rf resource/nginx/nginx.conf.default /etc/nginx/nginx.conf -y
 cp -f resource/nginx/default.* /etc/nginx/ 
 /usr/sbin/groupadd -f www-data
 /usr/sbin/useradd -g www-data www-data
