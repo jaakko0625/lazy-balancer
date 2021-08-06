@@ -1,7 +1,7 @@
 #!/bin/bash
 
 yum update -y
-yum -y install epel-release
+yum -y install epel-release -y
 yum install -y python3 python3-devel python3-pip
 yum -y install tar make gcc zlib zlib-devel pcre-devel openssl openssl-devel libxslt-devel geoip-devel gd-devel
 rm -rf /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
@@ -57,9 +57,10 @@ tar -zxf ~/lazy-balancer/tengine* -C /tmp && cd /tmp/tengine-2.3.3
 make && make install
 mkdir -p /etc/nginx/conf.d
 
-cd /app/lazy_balancer
 cp -r ~/lazy-balancer/* /app/lazy_balancer/
-cp -rf resource/nginx/nginx.conf.default /etc/nginx/nginx.conf -y
+cd /app/lazy_balancer
+rm -rf /etc/nginx/nginx.conf
+cp -rf resource/nginx/nginx.conf.default /etc/nginx/nginx.conf
 cp -f resource/nginx/default.* /etc/nginx/ 
 /usr/sbin/groupadd -f www-data
 /usr/sbin/useradd -g www-data www-data

@@ -1,6 +1,7 @@
 
 {%- if not proxy.to_domain_toggle %}
 upstream {{ proxy.config_id | lower }} {
+    hash $remote_addr consistent;
     {%- if proxy.balancer_type == "ip_hash" %}
     hash $remote_addr consistent;
     {%- endif %}
@@ -36,20 +37,20 @@ upstream {{ proxy.config_id | lower }} {
 {%- if proxy.ssl_redirect_https %}
 # HTTP redirect
 server {
-	listen 80;
-	{%- if proxy.ipv6 %}
-	listen [::]:80;
-	{%- endif %}
-
-	server_name {{ proxy.server_name }};
-
-	location / {
-        {%- if proxy.listen == 443 %}
-		return 301 https://{{ proxy.server_name }}$request_uri;
-        {%- else %}
-		return 301 https://{{ proxy.server_name }}:{{ proxy.listen }}$request_uri;
+        listen 80;
+        {%- if proxy.ipv6 %}
+        listen [::]:80;
         {%- endif %}
-	}
+
+        server_name {{ proxy.server_name }};
+
+        location / {
+        {%- if proxy.listen == 443 %}
+                return 301 https://{{ proxy.server_name }}$request_uri;
+        {%- else %}
+                return 301 https://{{ proxy.server_name }}:{{ proxy.listen }}$request_uri;
+        {%- endif %}
+        }
 }
 {%- endif %}
 
@@ -112,36 +113,36 @@ server {
         {%- if proxy.to_domain_toggle %}
         proxy_pass {{ proxy.to_domain }};
 
-        proxy_http_version	1.1;
-        proxy_cache_bypass	$http_upgrade;
+        proxy_http_version      1.1;
+        proxy_cache_bypass      $http_upgrade;
 
-        proxy_set_header Upgrade			$http_upgrade;
-        proxy_set_header Connection 		"upgrade";
-        proxy_set_header Host				"{{ proxy.host }}";
-        proxy_set_header X-Real-IP			$remote_addr;
-        proxy_set_header X-Forwarded-For	$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto	$scheme;
-        proxy_set_header X-Forwarded-Host	"{{ proxy.host }}";
-        proxy_set_header X-Forwarded-Port	$server_port;
+        proxy_set_header Upgrade                        $http_upgrade;
+        proxy_set_header Connection             "upgrade";
+        proxy_set_header Host                           "{{ proxy.host }}";
+        proxy_set_header X-Real-IP                      $remote_addr;
+        proxy_set_header X-Forwarded-For        $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto      $scheme;
+        proxy_set_header X-Forwarded-Host       "{{ proxy.host }}";
+        proxy_set_header X-Forwarded-Port       $server_port;
         {%- else %}
         proxy_pass {{ proxy.backend_protocol }}://{{ proxy.config_id | lower }}/;
 
-        proxy_http_version	1.1;
-        proxy_cache_bypass	$http_upgrade;
+        proxy_http_version      1.1;
+        proxy_cache_bypass      $http_upgrade;
 
-        proxy_set_header Upgrade			$http_upgrade;
-        proxy_set_header Connection 		"upgrade";
+        proxy_set_header Upgrade                        $http_upgrade;
+        proxy_set_header Connection             "upgrade";
         {%- if proxy.backend_domain_toggle %}
-        proxy_set_header Host				"{{ proxy.backend_domain }}"; 
-        proxy_set_header X-Forwarded-Host	"{{ proxy.backend_domain }}"; 
+        proxy_set_header Host                           "{{ proxy.backend_domain }}"; 
+        proxy_set_header X-Forwarded-Host       "{{ proxy.backend_domain }}"; 
         {%- else %}
-        proxy_set_header Host				$host; 
-        proxy_set_header X-Forwarded-Host	$host; 
+        proxy_set_header Host                           $host; 
+        proxy_set_header X-Forwarded-Host       $host; 
         {%- endif %}
-        proxy_set_header X-Forwarded-For	$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto	$scheme;
-        proxy_set_header X-Forwarded-Port	$server_port;
-        proxy_set_header X-Real-IP			$remote_addr;
+        proxy_set_header X-Forwarded-For        $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto      $scheme;
+        proxy_set_header X-Forwarded-Port       $server_port;
+        proxy_set_header X-Real-IP                      $remote_addr;
         {%- endif %}
     }
 
@@ -166,12 +167,9 @@ server {
 
 server {
     listen {{ proxy.listen }};
-    proxy_connect_timeout 5s;
-    proxy_timeout 30s;
     proxy_pass {{ proxy.config_id | lower }};
     {%- if proxy.access_log %}
     access_log {{ proxy.access_log }} proxy;
     {%- endif %}
 }
 {%- endif %}
-
