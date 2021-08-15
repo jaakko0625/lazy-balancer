@@ -72,7 +72,5 @@ rm -rf db/*
 rm -rf */migrations/00*.py
 python manage.py makemigrations --noinput
 python manage.py migrate --run-syncdb
-
-sed -i '/^exit 0/i supervisord -c /app/lazy_balancer/service/supervisord.conf' /etc/rc.local
-echo "alias supervisoctl='supervisorctl -c /app/lazy_balancer/service/supervisord.conf'" >> ~/.bashrc
-supervisord -c /app/lazy_balancer/service/supervisord.conf
+python manage.py makemigrations --noinput 2>/dev/null
+python manage.py migrate --run-syncdb 

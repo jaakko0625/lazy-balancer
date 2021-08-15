@@ -1,6 +1,7 @@
 #!/bin/bash
 
 sudo apt-get update --fix-missing
+sudo apt-get install -y geoip-bin geoip-database libgeoip-dev
 sudo apt-get install -y build-essential libssl-dev libpcre3 libpcre3-dev zlib1g-dev libxml2-dev libxslt1-dev libgd-dev libgeoip-dev libluajit-5.1
 sudo apt-get install -y python3 python3-dev python3-pip 
 sudo apt-get -y purge nginx* nginx-*
@@ -60,9 +61,13 @@ tar -zxf /tmp/tengine.tar.gz -C /tmp && cd /tmp/tengine-2.3.3
 make && sudo make install
 sudo mkdir -p /etc/nginx/conf.d
 
+cp -r ~/lazy-balancer/* /app/lazy_balancer/
 cd /app/lazy_balancer
-sudo cp -f resource/nginx/nginx.conf.default /etc/nginx/nginx.conf
-sudo cp -f resource/nginx/default.* /etc/nginx/ 
+rm -rf /etc/nginx/nginx.conf
+cp -rf resource/nginx/nginx.conf.default /etc/nginx/nginx.conf
+cp -f resource/nginx/default.* /etc/nginx/ 
+/usr/sbin/groupadd -f www-data
+/usr/sbin/useradd -g www-data www-data
 
 sudo pip3 install pip --upgrade
 sudo pip3 install -r requirements.txt --upgrade
@@ -71,7 +76,6 @@ sudo rm -rf db/*
 sudo rm -rf */migrations/00*.py
 python manage.py makemigrations --noinput
 python manage.py migrate --run-syncdb
+python manage.py makemigrations --noinput 2>/dev/null
+python manage.py migrate --run-syncdb 
 
-sudo sed -i '/^exit 0/i supervisord -c /app/lazy_balancer/service/supervisord.conf' /etc/rc.local
-echo "alias supervisoctl='supervisorctl -c /app/lazy_balancer/service/supervisord.conf'" >> ~/.bashrc
-sudo supervisord -c /app/lazy_balancer/service/supervisord.conf

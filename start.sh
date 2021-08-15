@@ -1,0 +1,1 @@
+supervisord -c /app/lazy_balancer/service/supervisord_docker.conf
