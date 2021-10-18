@@ -74,3 +74,9 @@ python manage.py makemigrations --noinput
 python manage.py migrate --run-syncdb
 python manage.py makemigrations --noinput 2>/dev/null
 python manage.py migrate --run-syncdb 
+
+cat >> /etc/rc.d/rc.local <<EOF
+supervisord -c /app/lazy_balancer/service/supervisord.conf
+EOF
+chmod +x /etc/rc.d/rc.local
+supervisord -c /app/lazy_balancer/service/supervisord.conf
