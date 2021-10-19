@@ -1,16 +1,16 @@
 #!/bin/bash
 
-sudo apt-get update --fix-missing
-sudo apt-get install -y geoip-bin geoip-database libgeoip-dev
-sudo apt-get install -y build-essential libssl-dev libpcre3 libpcre3-dev zlib1g-dev libxml2-dev libxslt1-dev libgd-dev libgeoip-dev libluajit-5.1
-sudo apt-get install -y python3 python3-dev python3-pip 
-sudo apt-get -y purge nginx* nginx-*
-sudo apt-get -y autoremove
-sudo rm -rf /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
+apt-get update --fix-missing
+apt-get install -y geoip-bin geoip-database libgeoip-dev
+apt-get install -y build-essential libssl-dev libpcre3 libpcre3-dev zlib1g-dev libxml2-dev libxslt1-dev libgd-dev libgeoip-dev libluajit-5.1
+apt-get install -y python3 python3-dev python3-pip 
+apt-get -y purge nginx* nginx-*
+apt-get -y autoremove
+rm -rf /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
 
-sudo mkdir -p /app/lazy_balancer/db
-#sudo cp -r /vagrant/* /app/lazy_balancer
-sudo chown -R 1000.1000 /app
+mkdir -p /app/lazy_balancer/db
+#cp -r /vagrant/* /app/lazy_balancer
+chown -R 1000.1000 /app
 tar zxf luajit* -C /tmp && cd /tmp/luajit2-2.1-20190626
 make && make install
 export LUAJIT_INC=/usr/local/include/luajit-2.1
@@ -56,8 +56,8 @@ tar -zxf ~/lazy-balancer/tengine* -C /tmp && cd /tmp/tengine-2.3.3
       --add-module=./modules/ngx_http_reqstat_module \
       --with-http_geoip_module=dynamic \
       --with-stream
-make && sudo make install
-sudo mkdir -p /etc/nginx/conf.d
+make && make install
+mkdir -p /etc/nginx/conf.d
 
 cp -r ~/lazy-balancer/* /app/lazy_balancer/
 cd /app/lazy_balancer
@@ -67,11 +67,11 @@ cp -f resource/nginx/default.* /etc/nginx/
 /usr/sbin/groupadd -f www-data
 /usr/sbin/useradd -g www-data www-data
 
-sudo pip3 install pip --upgrade
-sudo pip3 install -r requirements.txt --upgrade
+pip3 install pip --upgrade
+pip3 install -r requirements.txt --upgrade
 
-sudo rm -rf db/*
-sudo rm -rf */migrations/00*.py
+rm -rf db/*
+rm -rf */migrations/00*.py
 python manage.py makemigrations --noinput
 python manage.py migrate --run-syncdb
 python manage.py makemigrations --noinput 2>/dev/null
