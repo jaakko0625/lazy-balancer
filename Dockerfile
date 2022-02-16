@@ -33,14 +33,16 @@ RUN set -x \
                 python3-dev \
                 libffi-dev \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && curl -fsSL https://github.com/openresty/luajit2/archive/${LUAJIT_VERSION}.tar.gz -o luajit.tar.gz \
+#    && curl -fsSL https://github.com/openresty/luajit2/archive/${LUAJIT_VERSION}.tar.gz -o luajit.tar.gz \
+    && cp /app/lazy_balancer/luajit2-2.1-20190626.tar.gz ./luajit.tar.gz \
     && tar zxf luajit.tar.gz -C ${tempDir} \
     && cd ${tempDir}/luajit2-${LUAJIT_VERSION#v} \
     && make && make install \
     && export LUAJIT_INC=/usr/local/include/luajit-2.1 \
     && export LUAJIT_LIB=/usr/local/lib \
     && ln -sf luajit /usr/local/bin/luajit \
-    && curl -fsSL https://github.com/alibaba/tengine/archive/${TENGINE_VERSION}.tar.gz -o tengine.tar.gz \
+#    && curl -fsSL https://github.com/alibaba/tengine/archive/${TENGINE_VERSION}.tar.gz -o tengine.tar.gz \
+    && cp /app/lazy_balancer/tengine-2.3.3.tar.gz ./tengine.tar.gz \
     && tar zxf tengine.tar.gz -C ${tempDir} \
     && cd ${tempDir}/tengine-${TENGINE_VERSION} \
     && ./configure --user=www-data --group=www-data \

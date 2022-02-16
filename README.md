@@ -64,16 +64,16 @@
 ### 容器
 * 编译镜像
 ```
-docker build -t <lazy-balancer>:<v1.3.6beta>
+docker build -t lazy-balancer:jaakko0.1 .
 ```
 > 也可以 DockerHub `https://hub.docker.com/r/v55448330/lazy-balancer`
 
 * 启动命令
 ```
 docker run -d --restart=always --net=host --name=lazy_balancer \
-    -v <db_dir>:/app/lazy_balancer/db \
-    -v <log_dir>:/var/log/nginx \
-    <lazy-balancer>:<v1.3.6beta> or v55448330/lazy-balancer:latest
+    -v /app/lazy_balancer/db:/app/lazy_balancer/db \
+    -v /var/log/nginx:/var/log/nginx \
+    lazy-balancer:jaakko0.1
 ```
 * 初始化数据库
 ```
